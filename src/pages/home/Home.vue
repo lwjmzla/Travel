@@ -1,8 +1,10 @@
 <template>
   <div>
     <home-header></home-header>
-    <home-swiper></home-swiper>
-    <home-icons></home-icons>
+    <home-swiper :list="swiperList"></home-swiper>
+    <home-icons :list="iconList"></home-icons>
+    <home-recommend :list="recommendList"></home-recommend>
+    <home-weekend :list="weekendList"></home-weekend>
   </div>
 </template>
 
@@ -10,16 +12,57 @@
 import HomeHeader from './components/Header.vue'
 import HomeSwiper from './components/Swiper.vue'
 import HomeIcons from './components/Icons.vue'
+import HomeRecommend from './components/Recommend.vue'
+import HomeWeekend from './components/Weekend.vue'
+import axios from 'axios'
+import { mapState } from 'vuex'
 export default {
   name: 'home',
   components: {
+    // HomeHeader: () => import('./components/Header.vue'), //动态组件
     HomeHeader,
     HomeSwiper,
-    HomeIcons
+    HomeIcons,
+    HomeRecommend,
+    HomeWeekend
   },
-  data () {
+  data() {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      swiperList: [],
+      iconList: [],
+      recommendList: [],
+      weekendList: [],
+      lastCity: ''
+    }
+  },
+  computed: {
+    ...mapState(['city'])
+  },
+  methods: {
+    getHomeInfo() {
+      axios.get('/api/index.json?city=' + this.city)
+        .then(this.getHomeInfoSucc)
+    },
+    getHomeInfoSucc(res) {
+      console.log(res)
+      res = res.data
+      if (res.ret && res.data) {
+        const data = res.data
+        this.swiperList = data.swiperList
+        this.iconList = data.iconList
+        this.recommendList = data.recommendList
+        this.weekendList = data.weekendList
+      }
+    }
+  },
+  mounted() {
+    this.getHomeInfo()
+    this.lastCity = this.city
+  },
+  activated () {
+    if (this.lastCity !== this.city) {
+      this.lastCity = this.city
+      this.getHomeInfo()
     }
   }
 }
@@ -27,5 +70,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>

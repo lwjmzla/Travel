@@ -1,6 +1,6 @@
 <template>
  <div class="icons">
-    <swiper  >
+    <swiper  :options="swiperOption">
       <swiper-slide v-for="(pageitems,index) in pages" :key="index">
         <div class="icon" v-for="item in pageitems" :key="item.id">
           <div class="icon-img">
@@ -15,71 +15,21 @@
 
 <script>
 export default {
+  props: {
+    list: Array
+  },
   data() {
     return {
-      iconList: [
-        {
-          id: '001',
-          imgUrl:
-            'http://b2c.gaohangip.com/Themes/Mobile/Content/img/nav/nav1.png',
-          desc: '热门景点1'
-        },
-        {
-          id: '002',
-          imgUrl:
-            'http://b2c.gaohangip.com/Themes/Mobile/Content/img/nav/nav1.png',
-          desc: '热门景点2'
-        },
-        {
-          id: '003',
-          imgUrl:
-            'http://b2c.gaohangip.com/Themes/Mobile/Content/img/nav/nav1.png',
-          desc: '热门景点3'
-        },
-        {
-          id: '004',
-          imgUrl:
-            'http://b2c.gaohangip.com/Themes/Mobile/Content/img/nav/nav1.png',
-          desc: '热门景点4'
-        },
-        {
-          id: '005',
-          imgUrl:
-            'http://b2c.gaohangip.com/Themes/Mobile/Content/img/nav/nav1.png',
-          desc: '热门景点5'
-        },
-        {
-          id: '006',
-          imgUrl:
-            'http://b2c.gaohangip.com/Themes/Mobile/Content/img/nav/nav1.png',
-          desc: '热门景点6'
-        },
-        {
-          id: '007',
-          imgUrl:
-            'http://b2c.gaohangip.com/Themes/Mobile/Content/img/nav/nav1.png',
-          desc: '热门景点7'
-        },
-        {
-          id: '008',
-          imgUrl:
-            'http://b2c.gaohangip.com/Themes/Mobile/Content/img/nav/nav1.png',
-          desc: '热门景点8'
-        },
-        {
-          id: '009',
-          imgUrl:
-            'http://b2c.gaohangip.com/Themes/Mobile/Content/img/nav/nav1.png',
-          desc: '热门景点9'
-        }
-      ]
+      swiperOption: {
+        autoplay: false
+      }
     }
   },
   computed: {
-    //这个的难点在于：传了一系列的数据，一页最多8个，然后需要分组 然后生成格式为  [ [xxx],[xxx]... ]的数据
+    // 这个的难点在于：传了一系列的数据，一页最多8个，然后需要分组 然后生成格式为  [ [xxx],[xxx]... ]的数据
     pages() {
       let pages = []
-      this.iconList.forEach((item, index) => {
+      this.list.forEach((item, index) => {
         const page = Math.floor(index / 8)
         if (!pages[page]) {
           pages[page] = []
@@ -100,6 +50,7 @@ export default {
   width: 100%;
   height: 3.75rem;
   overflow: hidden;
+  margin-top : 0.1rem;
 
   .icon {
     position: relative;
